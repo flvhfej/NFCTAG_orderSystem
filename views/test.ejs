@@ -6,10 +6,11 @@
     <title>머시기 가게</title>
     <script src="test_js.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap" rel="stylesheet">
-    <link href="allcss.css" rel="stylesheet">
+    <link href="./allcss.css" rel="stylesheet">
 </head>
 <body>
     <!--이미지 배율은100 70으로 고정-->
+    <!--
     <div class="grid-container">
         <div class="menu_container" onclick="selectOp(1)"><img src="firstStore/menu_img/espreeso.png" width="100%" height="70%" alt="에스프레소">
             <p>에스프레소</p></div>
@@ -18,18 +19,19 @@
         <div class="menu_container" onclick="selectOp(1)"><img src="firstStore/menu_img/zabachip.png" width="100%" height="70%" alt="자바칩">
             <p>자바칩 프라페</p></div>
         <div class="menu_container" onclick="selectOp(1)"><p class="center">WiFi 연결하기</p></div>
-    </div>
+        -->
+        <!--아래는 menu.ejs에서 가져온 놈-->
+        <div class="grid-container">
+          <% items.forEach(item => { %>
+            <div class="menu_container" onclick="selectOp(<%= item.id %>)">
+              <h2><%= item.name %></h2>
+              <img src="<%= item.image_url %>" alt="<%= item.name %>">
+              <p>Price: $<%= item.price %></p>
+              <p><%= item.description %></p>
+            </div>
+          <% }) %>
+        </div>
     
-    <!--아래는 menu.ejs에서 가져온 놈-->
-    <div>
-        <% items.forEach(item => { %>
-          <div class="menu_container">
-            <h2><%= item.name %></h2>
-            <img src="<%= item.image_url %>" alt="<%= item.name %>">
-            <p>Price: $<%= item.price %></p>
-            <p><%= item.description %></p>
-          </div>
-        <% }) %>
       </div>
 </body>
 </html>

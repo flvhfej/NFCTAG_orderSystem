@@ -34,7 +34,7 @@ app.get('/admin', (req, res) => {
     res.render('admin'); // admin.ejs 파일을 렌더링
 });
 
-app.post('/admin', (req, res) => {
+app.post('/admin_adTomenu', (req, res) => { // post방식 admin_adTomenu
     const { name, image_url, price, description } = req.body;
     const sql = 'INSERT INTO menu (name, image_url, price, description) VALUES (?, ?, ?, ?)';
     db.query(sql, [name, image_url, price, description], (err, result) => {
@@ -43,9 +43,25 @@ app.post('/admin', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.redirect('/');
+        res.redirect('/admin');
     });
 });
+
+app.post('/admin_addel', (req, res) => { // post방식 admin_addel 
+    const { id } = req.body;
+    console.log('Request Body:', req.body); //일단 수시로 확인하기 위한 로그
+    const sql = 'DELETE FROM menu WHERE id = ?';
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
+            res.status(500).send('데이터베이스 쿼리 실패');
+            return;
+        }
+        res.redirect('/admin');
+    });
+});
+
+
 
 // 손님 페이지
 app.get('/menu', (req, res) => {
