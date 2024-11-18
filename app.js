@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const app = express();
 
-app.use(express.static('public'));
+app.use(express.static('views'));
 app.set('view engine', 'ejs');
 app.set('views', './views'); // 뷰 파일 디렉토리 설정
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,12 +26,12 @@ db.connect((err) => {
 
 // 기본 경로
 app.get('/', (req, res) => {
-    res.render('admin');
+    res.render('admin'); // test.ejs 파일을 렌더링
 });
 
 // 관리자 페이지
 app.get('/admin', (req, res) => {
-    res.render('admin');
+    res.render('admin'); // admin.ejs 파일을 렌더링
 });
 
 app.post('/admin', (req, res) => {
@@ -60,13 +60,19 @@ app.get('/menu', (req, res) => {
     });
 });
 
+// 이식할 손님 페이지
+app.get('/test', (req, res) => {
+    const sql = 'SELECT * FROM menu';
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
+            res.status(500).send('데이터베이스 쿼리 실패');
+            return;
+        }
+        res.render('test', { items: results}); // test.ejs 파일을 렌더링
+    });
+});
+
 app.listen(3001, () => {
     console.log('서버가 3001포트에서 실행됩니다.');
 });
-
-//데이터 베이스까진 연결 성공
-//하지만 html파일을 랜더링하는데 실패
-//ejs를 사용하여 html파일을 랜더링하는 방법으로 변경
-//페이지가 랜더링까진 됨
-//관리자에서 데이터 입력 후 쿼리 전송 시 데이터베이스에 데이터가 입력되지 않음
-//미리 입력해둔 데이터는 잘만 나옴

@@ -67,3 +67,17 @@ button:hover {
     font-size: 18px;
     font-weight: 700;
 }
+
+
+/*menu에서 가져온거*/
+.menu-item {
+    display: inline-block;
+    text-align: center;
+    margin: 15px;
+}
+
+.menu-item img {
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+}
