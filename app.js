@@ -6,8 +6,7 @@ const app = express();
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', './views'); // 뷰 파일 디렉토리 설정
-app.engine('html', require('ejs').renderFile); //ejs요구를 html로 랜더링
-
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -27,17 +26,17 @@ db.connect((err) => {
 
 // 기본 경로
 app.get('/', (req, res) => {
-    res.render('admin.html');
+    res.render('admin');
 });
 
 // 관리자 페이지
 app.get('/admin', (req, res) => {
-    res.render('admin.html');
+    res.render('admin');
 });
 
 app.post('/admin', (req, res) => {
     const { name, image_url, price, description } = req.body;
-    const sql = 'INSERT INTO Menu (name, image_url, price, description) VALUES (?, ?, ?, ?)';
+    const sql = 'INSERT INTO menu (name, image_url, price, description) VALUES (?, ?, ?, ?)';
     db.query(sql, [name, image_url, price, description], (err, result) => {
         if (err) {
             console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
@@ -67,3 +66,7 @@ app.listen(3001, () => {
 
 //데이터 베이스까진 연결 성공
 //하지만 html파일을 랜더링하는데 실패
+//ejs를 사용하여 html파일을 랜더링하는 방법으로 변경
+//페이지가 랜더링까진 됨
+//관리자에서 데이터 입력 후 쿼리 전송 시 데이터베이스에 데이터가 입력되지 않음
+//미리 입력해둔 데이터는 잘만 나옴
