@@ -28,8 +28,10 @@ db.connect((err) => {
 app.get('/', (req, res) => {
     res.render('main'); // main으로 최초접근 후 다른 곳으로 이동하는 용
 });
-// 관리자 페이지
-app.get('/admin', (req, res) => {
+
+
+// firstStore 관리자 페이지
+app.get('/firstStore/admin', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
         if (err) {
@@ -37,12 +39,12 @@ app.get('/admin', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('admin', { items1: results });
+        res.render('firstStore/admin', { items1: results });
     });
 });
 
 // post방식 admin_adTomenu /버튼으로 추가하기
-app.post('/admin_adTomenu', (req, res) => { 
+app.post('/firstStore/admin_adTomenu', (req, res) => { 
     const { name, image_url, price, description } = req.body;
     const sql = 'INSERT INTO menu (name, image_url, price, description) VALUES (?, ?, ?, ?)';
     db.query(sql, [name, image_url, price, description], (err, result) => {
@@ -51,12 +53,12 @@ app.post('/admin_adTomenu', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.redirect('/admin');
+        res.redirect('firstStore/admin');
     });
 });
 
 // post방식 admin_addel /버튼으로 삭제 시켜버리기
-app.post('/admin_addel', (req, res) => { 
+app.post('/firstStore/admin_addel', (req, res) => { 
     const { id } = req.body;
     console.log('버튼삭제 요청:', req.body); //일단 수시로 확인하기 위한 로그
     const sql = 'DELETE FROM menu WHERE id = ?;'
@@ -66,14 +68,14 @@ app.post('/admin_addel', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.redirect('/admin');
+        res.redirect('firstStore/admin');
     });
 });
 
 
 
 // 손님 페이지
-app.get('/menu2', (req, res) => {
+app.get('/firstStore/menu2', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
         if (err) {
@@ -81,12 +83,12 @@ app.get('/menu2', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('menu2', { items: results });
+        res.render('firstStore/menu2', { items: results });
     });
 });
 
-// 이식할 손님 페이지
-app.get('/test', (req, res) => {
+// 테스트용 손님페이지
+app.get('/TestStore/test', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
         if (err) {
@@ -94,7 +96,7 @@ app.get('/test', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('test', { items: results}); // test.ejs 파일을 렌더링
+        res.render('TestStore/test', { items: results}); // test.ejs 파일을 렌더링
     });
 });
 
