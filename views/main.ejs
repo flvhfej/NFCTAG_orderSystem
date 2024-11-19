@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Homepage</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to My Homepage</h1>
+    </header>
+    <main>
+        <p>This is a simple homepage using EJS.</p>
+        <script>
+            // 페이지 로드 후 5초 뒤에 다른 페이지로 이동
+            setTimeout(() => {
+                window.location.href = '/test';
+            }, 1000); // 1000ms = 1초
+        </script>
+    </main>
+    <footer>
+        <p>&copy; 2023 My Homepage</p>
+    </footer>
+</body>
+</html>

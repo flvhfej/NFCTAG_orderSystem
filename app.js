@@ -26,12 +26,19 @@ db.connect((err) => {
 
 // 기본 경로
 app.get('/', (req, res) => {
-    res.render('admin'); // test.ejs 파일을 렌더링
+    res.render('main'); // main으로 최초접근 후 다른 곳으로 이동하는 용
 });
-
 // 관리자 페이지
 app.get('/admin', (req, res) => {
-    res.render('admin'); // admin.ejs 파일을 렌더링
+    const sql = 'SELECT * FROM menu';
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
+            res.status(500).send('데이터베이스 쿼리 실패');
+            return;
+        }
+        res.render('admin', { items1: results });
+    });
 });
 
 app.post('/admin_adTomenu', (req, res) => { // post방식 admin_adTomenu
@@ -92,3 +99,7 @@ app.get('/test', (req, res) => {
 app.listen(3001, () => {
     console.log('서버가 3001포트에서 실행됩니다.');
 });
+
+
+//생각해보니 처음 렌더링을 할 때, db를 부르지 않는 녀석으로 접근 후 다른 곳에서 db를 쓰는 곳을 불러야 제대로 작동됨
+//바로 db를 불러오는 곳으로 접근하면 오류가 발생함
