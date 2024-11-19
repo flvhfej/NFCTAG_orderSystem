@@ -41,7 +41,8 @@ app.get('/admin', (req, res) => {
     });
 });
 
-app.post('/admin_adTomenu', (req, res) => { // post방식 admin_adTomenu
+// post방식 admin_adTomenu /버튼으로 추가하기
+app.post('/admin_adTomenu', (req, res) => { 
     const { name, image_url, price, description } = req.body;
     const sql = 'INSERT INTO menu (name, image_url, price, description) VALUES (?, ?, ?, ?)';
     db.query(sql, [name, image_url, price, description], (err, result) => {
@@ -54,10 +55,11 @@ app.post('/admin_adTomenu', (req, res) => { // post방식 admin_adTomenu
     });
 });
 
-app.post('/admin_addel', (req, res) => { // post방식 admin_addel 
+// post방식 admin_addel /버튼으로 삭제 시켜버리기
+app.post('/admin_addel', (req, res) => { 
     const { id } = req.body;
-    console.log('Request Body:', req.body); //일단 수시로 확인하기 위한 로그
-    const sql = 'DELETE FROM menu WHERE id = ?';
+    console.log('버튼삭제 요청:', req.body); //일단 수시로 확인하기 위한 로그
+    const sql = 'DELETE FROM menu WHERE id = ?;'
     db.query(sql, [id], (err, result) => {
         if (err) {
             console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
@@ -99,7 +101,3 @@ app.get('/test', (req, res) => {
 app.listen(3001, () => {
     console.log('서버가 3001포트에서 실행됩니다.');
 });
-
-
-//생각해보니 처음 렌더링을 할 때, db를 부르지 않는 녀석으로 접근 후 다른 곳에서 db를 쓰는 곳을 불러야 제대로 작동됨
-//바로 db를 불러오는 곳으로 접근하면 오류가 발생함
