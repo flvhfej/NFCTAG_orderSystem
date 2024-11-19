@@ -73,7 +73,7 @@ app.post('/admin_addel', (req, res) => {
 
 
 // 손님 페이지
-app.get('/menu', (req, res) => {
+app.get('/menu2', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
         if (err) {
@@ -81,7 +81,7 @@ app.get('/menu', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('menu', { items: results });
+        res.render('menu2', { items: results });
     });
 });
 

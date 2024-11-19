@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>태그오더 - 정통 충북대지점</title>
+  <link rel="stylesheet" href="forMenu2.css">
+</head>
+<body>
+  <header class="header">
+    <div class="top-bar">
+      <span class="time">5:05</span>
+      <div class="icons">
+        <span class="signal">📶</span>
+        <span class="battery">🔋</span>
+      </div>
+    </div>
+    <div class="store-info">
+      <button class="back-btn">←</button>
+      <h1>정보통신공학부 충북대 지점</h1>
+      <div class="header-icons">
+        <button>🔗</button>
+        <button>🔍</button>
+        <button>🛒</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="menu-tabs">
+    <button>메뉴 찾기</button>
+    <button class="active">추천 메뉴</button>
+    <button>신메뉴</button>
+    <button>bhc 세트</button>
+    <button>뿌링클</button>
+    <p>ㅋㅋ 아직 작동은 안하지롱</p>
+  </nav>
+
+  <main class="menu-list">
+    <section class="menu-item">
+      <div class="menu-info">
+        <% items.forEach(item => { %>
+            <h2><%= item.name %></h2>
+            <img src="<%= item.image_url %>" alt="<%= item.name %>">
+            <p class="price"><%= item.price %>원</p>
+            <p class="review"><%= item.description %></p>
+            <br>
+        <% }) %>
+      </div>
+    </section>
+
+
+
+
+
+    <section class="menu-item">
+      <div class="menu-info">
+        <h2>HOT후라이드</h2>
+        <p>명불허전 바삭함, 고소함 가득 매콤하게 튀긴...</p>
+        <p class="price">21,000원</p>
+        <p class="review">리뷰 23개</p>
+      </div>
+    </section>
+
+    <section class="menu-item">
+      <div class="menu-info">
+        <h2>HOT골드킹</h2>
+        <p>bhc만의 속성된 소스로 매콤, 달콤, 짭조름...</p>
+        <p class="price">21,000원</p>
+        <p class="review">리뷰 2개</p>
+      </div>
+    </section>
+
+    <section class="menu-item">
+      <div class="menu-info">
+        <h2>HOT골드킹 콤보</h2>
+        <p>[윙/봉/닭다리 5조각씩 제공] bhc만의 속성...</p>
+        <p class="price">24,000원</p>
+        <p class="review">리뷰 4개</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
