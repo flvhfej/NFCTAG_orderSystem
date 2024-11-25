@@ -49,9 +49,9 @@
       <div class="modal-content">
           <span class="close" onclick="closeModal()">&times;</span>
           <h2 id="modal-menu-name"></h2>
-          <img id="modal-image" src="" alt="">
           <p id="modal-price"></p>
           <p id="modal-description"></p>
+          <button onclick="DoSendOrder()">주문 하기</button>
       </div>
   </div>
 
@@ -100,6 +100,29 @@
     function closeModal() {
         document.getElementById('myModal').style.display = 'none';
     }
+    let selectedMenu = '';
+    function DoSendOrder() {
+            fetch('/DoSendOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' //HTTP의 요청이 JSON형식임을 알리는 헤더
+                },
+                body: JSON.stringify({ menu: selectedMenu })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('주문이 완료되었습니다.');
+                    closeModal();
+                } else {
+                    alert('주문에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('주문에 실패했습니다.');
+            });
+        }
 </script>
 </body>
 </html>

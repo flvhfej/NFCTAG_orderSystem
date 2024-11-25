@@ -6,7 +6,8 @@ const app = express();
 app.use(express.static('views'));
 app.set('view engine', 'ejs');
 app.set('views', './views'); // 뷰 파일 디렉토리 설정
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true })); //url인코딩 데이터 파싱
+app.use(bodyParser.json()); // json 데이터 파싱
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -98,6 +99,15 @@ app.get('/TestStore/test', (req, res) => {
         }
         res.render('TestStore/test', { items: results}); // test.ejs 파일을 렌더링
     });
+});
+
+
+//주문 완료 처리
+app.post('/DoSendOrder', (req, res) => { 
+    const { menu } = req.body;
+    console.log('주문 완료:', menu); // 주문 완료 로그
+    // 주문 완료 처리 로직을 여기에 추가할 수 있습니다.
+    res.json({ success: true });
 });
 
 app.listen(3001, () => {
