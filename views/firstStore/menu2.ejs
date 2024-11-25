@@ -34,14 +34,26 @@
     <section class="menu-item">
       <div class="menu-info">
         <% items.forEach(item => { %>
+          <div class="menu-container" onclick="openModal(<%= item.id %>, '<%= item.name %>', '<%= item.image_url %>', '<%= item.price %>', '<%= item.description %>')">
             <h2><%= item.name %></h2>
             <img src="<%= item.image_url %>" alt="<%= item.name %>">
             <p class="price"><%= item.price %>원</p>
             <p class="review"><%= item.description %></p>
             <br>
+          </div>
         <% }) %>
       </div>
     </section>
+    <!-- 모달 창 -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h2 id="modal-name"></h2>
+          <img id="modal-image" src="" alt="">
+          <p id="modal-price"></p>
+          <p id="modal-description"></p>
+      </div>
+  </div>
 
 
 
@@ -74,5 +86,21 @@
       </div>
     </section>
   </main>
+  
+  
+  <!--모달 관련 스크립트, 나중에 js파일로 따로 빼놓을 것-->
+  <script>
+    function openModal(id, name, imageUrl, price, description) {
+        document.getElementById('modal-name').textContent = name;
+        document.getElementById('modal-image').src = imageUrl;
+        document.getElementById('modal-price').textContent = price + '원';
+        document.getElementById('modal-description').textContent = description;
+        document.getElementById('myModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+</script>
 </body>
 </html>
