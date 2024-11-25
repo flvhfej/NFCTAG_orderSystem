@@ -59,7 +59,7 @@ app.post('/admin_adTomenu', (req, res) => {
 });
 
 // post방식 admin_addel /버튼으로 삭제 시켜버리기
-app.post('/firstStore/admin_addel', (req, res) => { 
+app.post('/admin_addel', (req, res) => { 
     const { id } = req.body;
     console.log('버튼삭제 요청:', req.body); //일단 수시로 확인하기 위한 로그
     const sql = 'DELETE FROM menu WHERE id = ?;'
@@ -88,6 +88,15 @@ app.get('/firstStore/menu2', (req, res) => {
     });
 });
 
+//주문 완료 처리
+app.post('/DoSendOrder', (req, res) => { 
+    const { menu } = req.body;
+    console.log('주문 완료:', menu); // 주문 완료 로그
+    // 주문 완료 처리 로직을 여기에 추가할 것
+    res.json({ success: true });
+});
+
+
 // 테스트용 손님페이지
 app.get('/TestStore/test', (req, res) => {
     const sql = 'SELECT * FROM menu';
@@ -101,14 +110,6 @@ app.get('/TestStore/test', (req, res) => {
     });
 });
 
-
-//주문 완료 처리
-app.post('/DoSendOrder', (req, res) => { 
-    const { menu } = req.body;
-    console.log('주문 완료:', menu); // 주문 완료 로그
-    // 주문 완료 처리 로직을 여기에 추가할 수 있습니다.
-    res.json({ success: true });
-});
 
 app.listen(3001, () => {
     console.log('서버가 3001포트에서 실행됩니다.');
