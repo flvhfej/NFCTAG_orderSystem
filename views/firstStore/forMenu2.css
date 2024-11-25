@@ -23,15 +23,6 @@
     background-color: #f9f9f9;
   }
   
-  .top-bar .time {
-    font-size: 14px;
-  }
-  
-  .top-bar .icons {
-    display: flex;
-    gap: 5px;
-  }
-  
   /* 가게 정보 */
   .store-info {
     display: flex;
