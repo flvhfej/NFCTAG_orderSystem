@@ -34,7 +34,7 @@
     <section class="menu-item">
       <div class="menu-info">
         <% items.forEach(item => { %>
-          <div class="menu-container" onclick="openModal(<%= item.id %>, '<%= item.image_url %>', '<%= item.price %>', '<%= item.description %>')">
+          <div class="menu-container" onclick="openModal(<%= item.id %>, '<%= item.name %>', '<%= item.price %>', '<%= item.description %>')">
             <h2><%= item.name %></h2>
             <img src="<%= item.image_url %>" alt="<%= item.name %>">
             <p class="price"><%= item.price %>원</p>
@@ -90,7 +90,9 @@
   
   <!--모달 관련 스크립트, 나중에 js파일로 따로 빼놓을 것-->
   <script>
+    let selectedMenu = '';//선택한 메뉴 이름 저장
     function openModal(id, name, price, description) {
+        selectedMenu=name;
         document.getElementById('modal-menu-name').textContent = name;
         document.getElementById('modal-price').textContent = price + '원';
         document.getElementById('modal-description').textContent = description;
@@ -100,8 +102,8 @@
     function closeModal() {
         document.getElementById('myModal').style.display = 'none';
     }
-    let selectedMenu = '';
-    function DoSendOrder() {
+  
+    function DoSendOrder(name) {
             fetch('/DoSendOrder', {
                 method: 'POST',
                 headers: {
