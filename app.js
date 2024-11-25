@@ -84,7 +84,7 @@ app.get('/firstStore/menu2', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('firstStore/menu2', { items: results });
+        res.render('firstStore/menu2', { items: results});
     });
 });
 
