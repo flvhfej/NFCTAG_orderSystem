@@ -44,7 +44,7 @@ app.get('/firstStore/admin', (req, res) => {
 });
 
 // post방식 admin_adTomenu /버튼으로 추가하기
-app.post('/firstStore/admin_adTomenu', (req, res) => { 
+app.post('/admin_adTomenu', (req, res) => { 
     const { name, image_url, price, description } = req.body;
     const sql = 'INSERT INTO menu (name, image_url, price, description) VALUES (?, ?, ?, ?)';
     db.query(sql, [name, image_url, price, description], (err, result) => {
@@ -53,7 +53,7 @@ app.post('/firstStore/admin_adTomenu', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.redirect('firstStore/admin');
+        res.redirect('/firstStore/admin');
     });
 });
 
