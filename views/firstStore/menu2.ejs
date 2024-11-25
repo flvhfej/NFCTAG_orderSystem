@@ -34,7 +34,7 @@
     <section class="menu-item">
       <div class="menu-info">
         <% items.forEach(item => { %>
-          <div class="menu-container" onclick="openModal(<%= item.id %>, '<%= item.name %>', '<%= item.image_url %>', '<%= item.price %>', '<%= item.description %>')">
+          <div class="menu-container" onclick="openModal(<%= item.id %>, '<%= item.image_url %>', '<%= item.price %>', '<%= item.description %>')">
             <h2><%= item.name %></h2>
             <img src="<%= item.image_url %>" alt="<%= item.name %>">
             <p class="price"><%= item.price %>원</p>
@@ -48,7 +48,7 @@
     <div id="myModal" class="modal">
       <div class="modal-content">
           <span class="close" onclick="closeModal()">&times;</span>
-          <h2 id="modal-name"></h2>
+          <h2 id="modal-menu-name"></h2>
           <img id="modal-image" src="" alt="">
           <p id="modal-price"></p>
           <p id="modal-description"></p>
@@ -90,9 +90,8 @@
   
   <!--모달 관련 스크립트, 나중에 js파일로 따로 빼놓을 것-->
   <script>
-    function openModal(id, name, imageUrl, price, description) {
-        document.getElementById('modal-name').textContent = name;
-        document.getElementById('modal-image').src = imageUrl;
+    function openModal(id, name, price, description) {
+        document.getElementById('modal-menu-name').textContent = name;
         document.getElementById('modal-price').textContent = price + '원';
         document.getElementById('modal-description').textContent = description;
         document.getElementById('myModal').style.display = 'block';
