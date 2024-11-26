@@ -14,7 +14,8 @@ const db = mysql.createConnection({
     user: 'root',
     password: '1234',
     database: 'restaurantDB',
-    port: 3306
+    port: 3306,
+    multipleStatements: true // 여러 쿼리 실행을 허용
 });
 
 db.connect((err) => {
@@ -58,6 +59,7 @@ app.post('/admin_adTomenu', (req, res) => {
     });
 });
 
+
 // post방식 admin_addel /버튼으로 삭제 시켜버리기
 app.post('/admin_addel', (req, res) => { 
     const { id } = req.body;
@@ -77,14 +79,22 @@ app.post('/admin_addel', (req, res) => {
 
 // 손님 페이지
 app.get('/firstStore/menu2', (req, res) => {
-    const sql = 'SELECT * FROM menu';
+    const sql = `
+        SELECT * FROM menu;
+        SELECT * FROM menu_option;
+    `;
     db.query(sql, (err, results) => {
         if (err) {
             console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('firstStore/menu2', { items: results});
+        
+        const menuResults = results[0];
+        const menuOptionResults = results[1];
+
+        //메인메뉴는 items, 추가옵션은 options
+        res.render('firstStore/menu2', { items: menuResults, options: menuOptionResults });
     });
 });
 
