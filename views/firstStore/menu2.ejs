@@ -27,7 +27,7 @@
     <button>신메뉴</button>
     <button>bhc 세트</button>
     <button>뿌링클</button>
-    <p>ㅋㅋ 아직 작동은 안하지롱</p>
+    <p>버튼은 아직 작동 x</p>
   </nav>
 
   <main class="menu-list">
@@ -36,14 +36,15 @@
         <% items.forEach(item => { %>
           <div class="menu-container" onclick="openModal(<%= item.id %>, '<%= item.name %>', '<%= item.price %>', '<%= item.description %>')">
             <h2><%= item.name %></h2>
+            <img class="menu-img" src="<%= item.image_url %>" alt="<%= item.name %>">
             <p class="price"><%= item.price %>원</p>
             <p class="review"><%= item.description %></p>
-            <br>
+            <br><br>
           </div>
-          <img class="menu-img" src="<%= item.image_url %>" alt="<%= item.name %>">
         <% }) %>
       </div>
     </section>
+    
     <!-- 모달 창 -->
     <div id="myModal" class="modal">
       <div class="modal-content">

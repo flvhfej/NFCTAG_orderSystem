@@ -38,6 +38,22 @@
     <textarea id="description" name="description" required></textarea><br>
     <button type="submit">Add Item</button>
     </form>
+
+    <div>
+      <h1>테스트 이미지 업로드</h1>
+      <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="myFile" />
+        <button type="submit">Upload</button>
+    </form>
+    </div>
+
+    <div>
+      <h1>이미지 업로드</h1>
+      <form action="/Storeimg_upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="myFile" />
+        <button type="submit">Upload</button>
+    </form>
+    </div>
 </div>
 </body>
 </html>
