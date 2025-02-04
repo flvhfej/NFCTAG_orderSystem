@@ -30,30 +30,64 @@
   <form action="/admin_adTomenu" method="POST">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required><br>
-    <label for="image_url">Image URL:</label>
-    <input type="text" id="image_url" name="image_url" required><br>
+
+    <label for="image_url">이미지 파일명:</label>
+    <input type="text" id="image_url" name="image_url" readonly><br>
+
     <label for="price">Price:</label>
     <input type="number" id="price" name="price" step="0.01" required><br>
+
     <label for="description">Description:</label>
     <textarea id="description" name="description" required></textarea><br>
+
     <button type="submit">Add Item</button>
     </form>
 
     <div>
-      <h1>테스트 이미지 업로드</h1>
-      <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="myFile" />
-        <button type="submit">Upload</button>
-    </form>
-    </div>
-
-    <div>
       <h1>이미지 업로드</h1>
-      <form action="/Storeimg_upload" method="POST" enctype="multipart/form-data">
+      <form id="imge_UploadForm" action="/Storeimg_upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="myFile" />
         <button type="submit">Upload</button>
     </form>
     </div>
 </div>
+<!--아래 스크립트는 나중에 js파일로 빼놓을 것-->
+<script>
+  function uploadImage() { //메뉴 추가에서 이미지를 서버에 업로드 용 로직
+      const imageInput = document.getElementById('imge_UploadForm');
+      const formData = new FormData();
+      formData.append('myFile', imageInput.files[0]);
+  
+      fetch('/StoreImg_upload', {
+          method: 'POST',
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.filename) {
+              document.getElementById('image_url').value = data.filename;
+              alert('이미지 업로드 완료!');
+          } else {
+              alert('이미지 업로드 실패!');
+          }
+      })
+      .catch(error => console.error('업로드 오류:', error));
+  }
+    
+  //이미지 업로드 시 자동으로 이미지 파일명을 입력해주는 기능
+  function getQueryParam(param) { 
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const filename = getQueryParam('filename');
+            if (filename) {
+                document.getElementById('image_url').value = filename;
+            }
+        });
+
+        
+  </script>
 </body>
 </html>

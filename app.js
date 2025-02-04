@@ -15,6 +15,7 @@ const upload = multer({
 		destination(req, file, done) {
       		console.log(file);
 		    done(null, path.join(__dirname, "test_img_upload/"));
+            //path.join(__dirname, "test_img_upload/") 이건 변수로도 선언이 가능하나 어차피 나중에 여러 상점 늘린다면 이걸로 쓸 수 밖에 없음
 	    },
     }),
 });
@@ -139,16 +140,17 @@ app.post('/upload', (req, res) => {
 upload.single() : 파일이 하나일 때 사용 하는 함수, 인수로는 html상에서 전달하는 객체의 name을 적는다.
 인수인 myFile은 나중에 수정예정, html에서도 수정요구
 */
-const uploadMiddleware = upload.single('myFile');
-app.use(uploadMiddleware);
-
-app.post('/Storeimg_upload', (req, res) => {
-    //test code 
-    console.log(req.file); //파일업로드 시 해당 파일의 정보 출력
-    res.status(200).send('uploaded');
+//firstStore 어드민용 이미지 업로드 구축
+app.post('/StoreImg_upload', upload.single('myFile'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: "파일이 업로드되지 않았습니다." });
+    }
+    //res.json({ filename: req.file.originalname });
+    res.redirect(`firstStore/admin?filename=${encodeURIComponent(req.file.originalname)}`);
 });
 
-
+//클라이언트가 이미지를 요청할 때 사용할 경로를 추가, 보안에 주의요구됨
+app.use("/test_img_upload", express.static(path.join(__dirname, "test_img_upload/")));
 
 
 
@@ -196,6 +198,7 @@ app.get('/TestStore/test', (req, res) => {
         res.render('TestStore/test', { items: results}); // test.ejs 파일을 렌더링
     });
 });
+
 
 const SubpoRt = 3001;
 app.listen(SubpoRt, () => {
