@@ -79,14 +79,26 @@
   
   .menu-item {
     display: flex;
+    flex-direction: column;
     gap: 15px;
     margin-bottom: 15px;
   }
   
+  .menu-container {
+    display: flex;
+    width:auto;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.menu-details {
+  flex: 1;
+}
   .menu-img {
     width: 100px;
     height: 100px;
     border-radius: 6px;
+    margin-left: auto; 
   }
   
   .menu-info h2 {

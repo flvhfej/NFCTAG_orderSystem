@@ -35,11 +35,13 @@
       <div class="menu-info">
         <% items.forEach(item => { %>
           <div class="menu-container" onclick="openModal(<%= item.id %>, '<%= item.name %>', '<%= item.price %>', '<%= item.description %>')">
+            <div class="menu-details">
             <h2><%= item.name %></h2>
-            <img class="menu-img" src="<%= item.image_url %>" alt="<%= item.name %>">
             <p class="price"><%= item.price %>원</p>
             <p class="review"><%= item.description %></p>
-            <br><br>
+          </div>
+          <br><br><br>
+            <img class="menu-img" src="/test_img_upload/<%= item.image_url %>" alt="<%= item.name %>">
           </div>
         <% }) %>
       </div>
