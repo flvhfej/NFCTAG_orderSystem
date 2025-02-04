@@ -197,7 +197,7 @@ app.get('/TestStore/test', (req, res) => {
     });
 });
 
-
-app.listen(3001, () => {
-    console.log('서버가 3001포트에서 실행됩니다.');
+const SubpoRt = 3001;
+app.listen(SubpoRt, () => {
+    console.log(`서버가 ${SubpoRt} 실행됩니다.`);
 });
