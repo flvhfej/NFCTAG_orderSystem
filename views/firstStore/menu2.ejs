@@ -40,7 +40,6 @@
             <p class="price"><%= item.price %>원</p>
             <p class="review"><%= item.description %></p>
           </div>
-          <br><br><br>
             <img class="menu-img" src="/test_img_upload/<%= item.image_url %>" alt="<%= item.name %>">
           </div>
         <% }) %>
@@ -106,7 +105,7 @@
         document.getElementById('myModal').style.display = 'none';
     }
   
-    function DoSendOrder(name) {
+    function DoSendOrder(name) { 
             fetch('/DoSendOrder', {
                 method: 'POST',
                 headers: {

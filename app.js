@@ -63,14 +63,23 @@ app.get('/firstStore/admin', (req, res) => {
             return;
         }
         res.render('firstStore/admin', { items1: results });
+        //items1 -> admin.ejs to line 12
     });
 });
 
 // post방식 admin_adTomenu /버튼으로 추가하기
 app.post('/admin_adTomenu', (req, res) => { 
+    var id=0;
+    if(req.body.id==0){
+        id=1;
+    }
+    else{
+        const fInd_max_id_from_menu='SELECT MAX(id) as max_id FROM menu';
+        db.
+    }
     const { name, image_url, price, description } = req.body;
-    const sql = 'INSERT INTO menu (name, image_url, price, description) VALUES (?, ?, ?, ?)';
-    db.query(sql, [name, image_url, price, description], (err, result) => {
+    const sql = 'INSERT INTO menu (id, name, image_url, price, description) VALUES (?,?, ?, ?, ?)';
+    db.query(sql, [id,name, image_url, price, description], (err, result) => {
         if (err) {
             console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
             res.status(500).send('데이터베이스 쿼리 실패');
