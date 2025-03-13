@@ -67,28 +67,39 @@ app.get('/firstStore/admin', (req, res) => {
     });
 });
 
-// post방식 admin_adTomenu /버튼으로 추가하기
-app.post('/admin_adTomenu', (req, res) => { 
-    var id=0;
-    if(req.body.id==0){
-        id=1;
-    }
-    else{
-        const fInd_max_id_from_menu='SELECT MAX(id) as max_id FROM menu';
-        db.
-    }
-    const { name, image_url, price, description } = req.body;
-    const sql = 'INSERT INTO menu (id, name, image_url, price, description) VALUES (?,?, ?, ?, ?)';
-    db.query(sql, [id,name, image_url, price, description], (err, result) => {
-        if (err) {
-            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
-            res.status(500).send('데이터베이스 쿼리 실패');
-            return;
-        }
-        res.redirect('/firstStore/admin');
-    });
-});
 
+// post방식 admin_adTomenu /버튼으로 추가하기
+app.post('/admin_adTomenu', (req, res) => {
+    var id = 0;
+    if (req.body.id == 0) {
+        id = 1;
+        insertMenu();
+    } else {
+        const fInd_max_id_from_menu = 'SELECT MAX(id) as max_id FROM menu';
+        db.query(fInd_max_id_from_menu, (err, result) => {
+            if (err) {
+                console.error('id 조회 실패: ' + err.stack);
+                res.status(500).send('데이터베이스 쿼리 실패');
+                return;
+            }
+            id = (result[0].max_id || 0) + 1;
+            insertMenu();
+        });
+    }
+
+    function insertMenu() {
+        const { name, image_url, price, description } = req.body;
+        const sql = 'INSERT INTO menu (id, name, image_url, price, description) VALUES (?, ?, ?, ?, ?)';
+        db.query(sql, [id, name, image_url, price, description], (err, result) => {
+            if (err) {
+                console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
+                res.status(500).send('데이터베이스 쿼리 실패');
+                return;
+            }
+            res.redirect('/firstStore/admin');
+        });
+    }
+});
 
 // post방식 admin_addel /버튼으로 삭제 시켜버리기
 app.post('/admin_addel', (req, res) => { 
