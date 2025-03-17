@@ -4,7 +4,7 @@ const path = require('path');
 const multer  = require('multer')
 //const upload = multer({ dest: 'test_img_upload/' }) //multer를 사용해 이미지 저장할 경로,테스트용임
 
-//multer를 사용해 이미지 저장할 경로 
+//7~23 line : multer를 사용해 이미지 저장할 경로
 const upload = multer({  
     storage: multer.diskStorage({
       	filename(req, file, done) {
@@ -15,11 +15,14 @@ const upload = multer({
 		destination(req, file, done) {
       		console.log(file);
 		    done(null, path.join(__dirname, "test_img_upload/"));
+		    //17line 지금은 모든 상점이 같은 폴더를 공유하나, 이후 각 상점 이미지 폴저인 menu_img폴더로 옳길 방법을 찾아야해,
+		    //어디  상점 어드민인지, 거기서 쿼리 쏘면 그 경로로 오는 뭐라쓰는거냐 어쨋든 그런 방식이 필요해보임
             //path.join(__dirname, "test_img_upload/") 이건 변수로도 선언이 가능하나 어차피 나중에 여러 상점 늘린다면 이걸로 쓸 수 밖에 없음
 	    },
     }),
 });
 
+//26~33 line : 필요 변수 선언
 const bodyParser = require('body-parser');
 const app = express();
 
@@ -29,6 +32,8 @@ app.set('views', './views'); // 뷰 파일 디렉토리 설정
 app.use(bodyParser.urlencoded({ extended: true })); //url인코딩 데이터 파싱
 app.use(bodyParser.json()); // json 데이터 파싱
 
+
+//35~51 line : db 접속코드, 호스트를 localhost가 아닌 서버 ip로 설정필요 요구됨, 이제 여러 곳에서 돌릴 수 있어야 하니까
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -46,14 +51,14 @@ db.connect((err) => {
     console.log('데이터베이스와 연결 성공!');
 });
 
-// 기본 경로
 
+// 기본 경로 : 상점 접속을 위한 페이지 로드용, 일단 이런식으로 밖에 못고치겠어
 app.get('/', (req, res) => {
     res.render('main'); // main으로 최초접근 후 다른 곳으로 이동하는 용
 });
 
 
-// firstStore 관리자 페이지
+//60~177line firstStore 관리자 페이지
 app.get('/firstStore/admin', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
@@ -175,7 +180,7 @@ app.use("/test_img_upload", express.static(path.join(__dirname, "test_img_upload
 
 
 
-// 손님 페이지
+// 182~210 첫번째 상점 손님페이지
 app.get('/firstStore/menu2', (req, res) => {
     const sql=`SELECT * FROM menu;`;
     /*const sql = `
@@ -206,7 +211,7 @@ app.post('/DoSendOrder', (req, res) => {
 });
 
 
-// 테스트용 손님페이지
+//213~224 테스트용 손님페이지
 app.get('/TestStore/test', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
@@ -219,7 +224,7 @@ app.get('/TestStore/test', (req, res) => {
     });
 });
 
-
+//서버 실행화면 확인
 const SubpoRt = 3001;
 app.listen(SubpoRt, () => {
     console.log(`서버가 ${SubpoRt} 실행됩니다.`);
