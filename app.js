@@ -35,13 +35,14 @@ app.use(bodyParser.urlencoded({ extended: true })); //url인코딩 데이터 파
 app.use(bodyParser.json()); // json 데이터 파싱
 
 
-//35~51 line : db 접속코드
+//39~74 line : db 접속코드
+require('dotenv').config();
 const db = mysql.createConnection({
-    host: '',
-    user: '',
-    password: '',
-    database: '',
-    port: ,
+    host: process.env.TAGORDER_DB_HOST,
+    user: process.env.TAGORDER_DB_USER,
+    password: process.env.TAGORDER_DB_PASSWORD,
+    database: process.env.TAGORDER_DB,
+    port: process.env.TAGORDER_DB_PORTNUM,
     multipleStatements: true // 여러 쿼리 실행을 허용
 });
 
