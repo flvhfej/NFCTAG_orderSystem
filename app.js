@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const path = require('path');
 const multer  = require('multer')
 
-let testPageConnect = false; // db연결안해도 test.ejs접속하기 위한 그시기
+let testPageConnect = false; // db연결 안되면 자동으로 test.ejs열리게 설정
 //const upload = multer({ dest: 'test_img_upload/' }) //multer를 사용해 이미지 저장할 경로,테스트용임
 
 //7~23 line : multer를 사용해 이미지 저장할 경로
@@ -75,9 +75,8 @@ db.connect((err) => {
 
 // 기본 경로 : 상점 접속을 위한 페이지 로드용, 일단 이런식으로 밖에 못고치겠어
 app.get('/', (req, res) => {
-    if(testPageConnect) { res.render('/TestStore/test.ejs');}
-    else {
-    res.render('main');} // main으로 최초접근 후 다른 곳으로 이동하는 용}
+    if(testPageConnect) { res.render('./TestStore/test.ejs');}
+    else {res.render('main');} // main으로 최초접근 후 다른 곳으로 이동하는 용}
 
 });
 
