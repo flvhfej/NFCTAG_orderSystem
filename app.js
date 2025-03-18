@@ -35,13 +35,13 @@ app.use(bodyParser.urlencoded({ extended: true })); //url인코딩 데이터 파
 app.use(bodyParser.json()); // json 데이터 파싱
 
 
-//35~51 line : db 접속코드, 호스트를 localhost가 아닌 서버 ip로 설정필요 요구됨, 이제 여러 곳에서 돌릴 수 있어야 하니까
+//35~51 line : db 접속코드
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'restaurantDB',
-    port: 3306,
+    host: '',
+    user: '',
+    password: '',
+    database: '',
+    port: ,
     multipleStatements: true // 여러 쿼리 실행을 허용
 });
 

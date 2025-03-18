@@ -1,16 +1,3 @@
-body {
-    font-family: 'Nunito', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #e0f7fa;
-    color: #00796b;
-
-}
-
-
 .menu_container { /*메뉴 칸*/
     text-align: center;
     background-color: #ffffff;
@@ -81,3 +68,41 @@ button:hover {
     height: 150px;
     cursor: pointer;
 }
+
+
+ .test-container {
+            display: grid;
+            width:auto;
+            /* 그리드 갯수,크기 조정 */
+            grid-template-rows: repeat(3, 100px);
+            grid-template-columns: repeat(3, 1fr);
+            /* 그리드 템플릿 */
+            grid-template-areas:
+                "header header header"
+                "aside   main    main"
+                "footer footer footer";
+        }
+
+        /* grid-area이름을 지정한다 */
+        header {
+            grid-area: header;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+        }
+        main {
+            grid-area: main;
+            background-color: #e0e0e0;
+            padding: 20px;
+        }
+        aside {
+            grid-area: aside;
+            background-color: #d0d0d0;
+            padding: 20px;
+        }
+        footer {
+            grid-area: footer;
+            background-color: #c0c0c0;
+            text-align: center;
+            padding: 20px;
+        }
