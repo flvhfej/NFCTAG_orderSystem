@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql');
 const path = require('path');
 const multer  = require('multer')
+
+let testPageConnect = false; // db연결안해도 test.ejs접속하기 위한 그시기
 //const upload = multer({ dest: 'test_img_upload/' }) //multer를 사용해 이미지 저장할 경로,테스트용임
 
 //7~23 line : multer를 사용해 이미지 저장할 경로
@@ -46,15 +48,37 @@ const db = mysql.createConnection({
 db.connect((err) => {
     if (err) {
         console.error('데이터베이스 연결 실패: ' + err.stack);
-        return;
+        const readline = require('readline'); //readline 활성화
+        const tsuzukeru = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        });
+
+        tsuzukeru.question('계속 진행하겠습니까? (Y/N)', (answer) => {
+        if(answer=='Y' || answer=='y'){
+            console.log('계속 진행합니다');
+            testPageConnect=true;
+            tsuzukeru.close();
+        }
+        else{
+             console.log('잘못 입력했어도 종료합니다.')
+             tsuzukeru.close();
+             process.exit(1);
+        }
+        });
     }
+    else{
     console.log('데이터베이스와 연결 성공!');
+    }
 });
 
 
 // 기본 경로 : 상점 접속을 위한 페이지 로드용, 일단 이런식으로 밖에 못고치겠어
 app.get('/', (req, res) => {
-    res.render('main'); // main으로 최초접근 후 다른 곳으로 이동하는 용
+    if(testPageConnect) { res.render('/TestStore/test.ejs');}
+    else {
+    res.render('main');} // main으로 최초접근 후 다른 곳으로 이동하는 용}
+
 });
 
 
