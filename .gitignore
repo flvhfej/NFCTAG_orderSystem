@@ -9,3 +9,8 @@
 
 #env 파일 무시
 .env
+
+#.DS_Store파일무시
+.DS_Store
+#.DS_Store파일 무시
+views/.DS_Store
