@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql');
 const path = require('path');
 const multer  = require('multer')
+
+let testPageConnect = false; // db연결 안되면 자동으로 test.ejs열리게 설정
 //const upload = multer({ dest: 'test_img_upload/' }) //multer를 사용해 이미지 저장할 경로,테스트용임
 
 //7~23 line : multer를 사용해 이미지 저장할 경로
@@ -33,28 +35,49 @@ app.use(bodyParser.urlencoded({ extended: true })); //url인코딩 데이터 파
 app.use(bodyParser.json()); // json 데이터 파싱
 
 
-//35~51 line : db 접속코드, 호스트를 localhost가 아닌 서버 ip로 설정필요 요구됨, 이제 여러 곳에서 돌릴 수 있어야 하니까
+//35~51 line : db 접속코드
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'restaurantDB',
-    port: 3306,
+    host: '',
+    user: '',
+    password: '',
+    database: '',
+    port: ,
     multipleStatements: true // 여러 쿼리 실행을 허용
 });
 
 db.connect((err) => {
     if (err) {
         console.error('데이터베이스 연결 실패: ' + err.stack);
-        return;
+        const readline = require('readline'); //readline 활성화
+        const tsuzukeru = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        });
+
+        tsuzukeru.question('계속 진행하겠습니까? (Y/N)', (answer) => {
+        if(answer=='Y' || answer=='y'){
+            console.log('계속 진행합니다');
+            testPageConnect=true;
+            tsuzukeru.close();
+        }
+        else{
+             console.log('잘못 입력했어도 종료합니다.')
+             tsuzukeru.close();
+             process.exit(1);
+        }
+        });
     }
+    else{
     console.log('데이터베이스와 연결 성공!');
+    }
 });
 
 
 // 기본 경로 : 상점 접속을 위한 페이지 로드용, 일단 이런식으로 밖에 못고치겠어
 app.get('/', (req, res) => {
-    res.render('main'); // main으로 최초접근 후 다른 곳으로 이동하는 용
+    if(testPageConnect) { res.render('./TestStore/test.ejs');}
+    else {res.render('main');} // main으로 최초접근 후 다른 곳으로 이동하는 용}
+
 });
 
 
