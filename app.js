@@ -236,7 +236,7 @@ app.post('/DoSendOrder', (req, res) => {
 
 
 //213~224 테스트용 손님페이지
-app.get('/TestStore/test', (req, res) => {
+app.get('/TestStore/TestStore_admin/TestStore_admin_main.ejs', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
         if (err) {
@@ -244,7 +244,7 @@ app.get('/TestStore/test', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('TestStore/test', { items: results}); // test.ejs 파일을 렌더링
+        res.render('/TestStore/TestStore_admin/TestStore_admin_main.ejs', { items: results}); // test.ejs 파일을 렌더링
     });
 });
 
