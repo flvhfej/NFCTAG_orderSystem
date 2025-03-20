@@ -76,8 +76,7 @@ db.connect((err) => {
 
 // 기본 경로 : 상점 접속을 위한 페이지 로드용, 일단 이런식으로 밖에 못고치겠어
 app.get('/', (req, res) => {
-    if(testPageConnect) { res.render('./TestStore/TestStore_admin/Order_related_page/test.ejs');}
-    else {res.render('main');} // main으로 최초접근 후 다른 곳으로 이동하는 용}
+    res.render('main', {TestPageConnect: testPageConnect});// main으로 최초접근 후 다른 곳으로 이동하는 용}
 
 });
 
