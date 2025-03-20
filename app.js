@@ -234,8 +234,11 @@ app.post('/DoSendOrder', (req, res) => {
     res.json({ success: true });
 });
 
-
-//213~224 테스트용 손님페이지
+//237~241테스트 상점 메인페이지 접속
+app.get('/TestStore/TestStore_admin/TestStore_admin_main', (req, res) => {
+        res.render('./TestStore/TestStore_admin/TestStore_admin_main'); // test.ejs 파일을 렌더링
+    });
+//242~253 테스트용 손님페이지
 app.get('/TestStore/TestStore_admin/TestStore_admin_main.ejs', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
