@@ -246,10 +246,17 @@ app.get('/TestStore/TestStore_admin/TestStore_admin_main.ejs', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('/TestStore/TestStore_admin/TestStore_admin_main.ejs', { items: results}); // test.ejs 파일을 렌더링
+        res.render('TestStore/TestStore_admin/TestStore_admin_main.ejs', { items: results}); // test.ejs 파일을 렌더링
     });
 });
 
+//테스트 상점 메인관리자 페이지 이동 스크립트
+app.get('/moveToModingMenu', (req, res) => {
+        res.render('./TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify'); // test.ejs 파일을 렌더링
+});
+app.get('/moveToOrder', (req, res) => {
+        res.render('./TestStore/TestStore_admin/Order_related_page/test'); // test.ejs 파일을 렌더링
+});
 //서버 실행화면 확인
 const SubpoRt = 3001;
 app.listen(SubpoRt, () => {

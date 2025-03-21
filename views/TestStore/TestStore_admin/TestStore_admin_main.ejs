@@ -7,27 +7,18 @@
   <link href="./allcss.css" rel="stylesheet">
 </head>
 <body>
+    <!--단순히 정산, 메뉴관리 이동 스크립트, GET방식으로 보냄, 관련 nodejs는 254~259-->
   <div class="grid-container">
-      <div class="menu_container">
-        <p>정산관리</p>
-        <h2>정산관리</h2>
-        <p>Price</p>
-        <p>description</p>
-      </div>
-
-      <div class="menu_container">
-          <p>메뉴 관리</p>
-          <h2>메뉴 관리</h2>
-          <p>Price</p>
-          <p>description</p>
-       </div>
-
-   <button class="menu_container" type="submit">
-       <p>메뉴 관리</p>
-       <h2>메뉴 관리</h2>
-       <p>Price</p>
-       <p>description</p>
-   </button>
+   <form class="menu_container" action="/moveToOrder" method="GET">
+       <button type="submit">
+           <h2>정산 관리</h2>
+       </button>
+   </form>
+   <form class="menu_container" action="/moveToModingMenu" method="GET">
+          <button type="submit">
+              <h2>메뉴 관리</h2>
+          </button>
+      </form>
   </div>
 </div>
 
