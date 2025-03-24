@@ -233,7 +233,7 @@ app.post('/DoSendOrder', (req, res) => {
     res.json({ success: true });
 });
 
-//237~241테스트 상점 메인페이지 접속
+//237~241테스트 상점 메인페이지 접속ㅇㅇ
 app.get('/TestStore/TestStore_admin/TestStore_admin_main', (req, res) => {
         res.render('./TestStore/TestStore_admin/TestStore_admin_main'); // test.ejs 파일을 렌더링
     });
