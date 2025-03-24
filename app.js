@@ -132,10 +132,10 @@ app.post('/admin_adTomenu', (req, res) => {
 
 // post방식 admin_adTooption /버튼으로 추가하기
 app.post('/admin_adTooption', (req, res) => {
-    const { name, option_price, description, menu_id } = req.body;
+    const { menu_id, name, additional_price, description} = req.body;
 
     const sql = 'INSERT INTO menu_option (menu_id, name, additional_price, description) VALUES (?, ?, ?, ?)';
-    db.query(sql, [menu_id, name, option_price, description], (err, result) => {
+    db.query(sql, [menu_id, name, additional_price, description], (err, result) => {
         if (err) {
             console.error('옵션 추가 실패:', err);
             return res.status(500).send('옵션 추가 실패');

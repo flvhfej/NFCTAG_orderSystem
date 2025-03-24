@@ -53,15 +53,15 @@
 
     <div class="Additional_option_container">
       <h1>추가 옵션</h1>
-      <form id="option_imge_UploadForm" action="/admin_adTooption" method="POST" enctype="multipart/form-data" onsubmit="OptionUploadImage(); return false;">
-        <label for="option_name">옵션 추가할 메뉴의 id:</label>
-        <input type="text" id="option_id" name="menu_id" required>
-        <label for="option_name">옵션 이름:</label>
-        <input type="text" id="option_name" name="option_name" required><br>
-        <label for="option_price">옵션 가격:</label>
-        <input type="number" id="option_price" name="option_price" step="1" required><br>
+      <form id="option_imge_UploadForm" action="/admin_adTooption" method="POST" onsubmit="OptionUploadImage(); return false;">
+        <label for="menu_id">옵션 추가할 메뉴의 id:</label>
+        <input type="text" id="menu_id" name="menu_id" required>
+        <label for="name">옵션 이름:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="additional_price">옵션 가격:</label>
+        <input type="number" id="additional_price" name="additional_price" step="1" required><br>
         <label for="description">옵션 설명:</label>
-        <textarea id="option_description" name="description" required></textarea><br><br>
+        <textarea id="description" name="description" required></textarea><br><br>
         <button type="submit">Add Option</button>
       </form>
 </div>
