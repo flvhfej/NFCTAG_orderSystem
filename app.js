@@ -132,10 +132,10 @@ app.post('/admin_adTomenu', (req, res) => {
 
 // post방식 admin_adTooption /버튼으로 추가하기
 app.post('/admin_adTooption', (req, res) => {
-    const { option_name, option_price, description, image_url, menu_id } = req.body;
+    const { name, option_price, description, menu_id } = req.body;
 
-    const sql = 'INSERT INTO menu_option (menu_id, name, image_url, price, description) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [menu_id, option_name, image_url, option_price, description], (err, result) => {
+    const sql = 'INSERT INTO menu_option (menu_id, name, additional_price, description) VALUES (?, ?, ?, ?)';
+    db.query(sql, [menu_id, name, option_price, description], (err, result) => {
         if (err) {
             console.error('옵션 추가 실패:', err);
             return res.status(500).send('옵션 추가 실패');
@@ -226,7 +226,7 @@ app.post('/StoreImg_upload', upload.single('myFile'), (req, res) => {
     //res.json({ filename: req.file.originalname });
     res.redirect(`firstStore/admin?filename=${encodeURIComponent(req.file.originalname)}`);
 });
-
+/* 메뉴 추가옵션은 잠시 미룸
 //firstStore 어드민용 옵션추가 이미지 업로드 구축
 app.post('/option_StoreImg_upload', upload.single('myFile'), (req, res) => {
     if (!req.file) {
@@ -235,6 +235,7 @@ app.post('/option_StoreImg_upload', upload.single('myFile'), (req, res) => {
     //res.json({ filename: req.file.originalname });
     res.redirect(`firstStore/admin?filename=${encodeURIComponent(req.file.originalname)}`);
 });
+*/
 //클라이언트가 이미지를 요청할 때 사용할 경로를 추가, 보안에 주의요구됨
 app.use("/test_img_upload", express.static(path.join(__dirname, "test_img_upload/")));
 

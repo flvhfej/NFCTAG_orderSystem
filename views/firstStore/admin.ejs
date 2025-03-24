@@ -54,21 +54,14 @@
     <div class="Additional_option_container">
       <h1>추가 옵션</h1>
       <form id="option_imge_UploadForm" action="/admin_adTooption" method="POST" enctype="multipart/form-data" onsubmit="OptionUploadImage(); return false;">
-          <label for="option_name">옵션 추가할 메뉴의 id:</label>
-          <input type="text" id="option_id" name="menu_id" required>
+        <label for="option_name">옵션 추가할 메뉴의 id:</label>
+        <input type="text" id="option_id" name="menu_id" required>
         <label for="option_name">옵션 이름:</label>
         <input type="text" id="option_name" name="option_name" required><br>
         <label for="option_price">옵션 가격:</label>
         <input type="number" id="option_price" name="option_price" step="1" required><br>
         <label for="description">옵션 설명:</label>
         <textarea id="option_description" name="description" required></textarea><br><br>
-        <label for="image_url">이미지 파일명:</label>
-        <input type="text" id="option_image_url" name="image_url" readonly><br>
-        <h2>추가옵션 이미지 업로드</h2>
-              <form id="option_imge_UploadForm" action="/option_StoreImg_upload" method="POST" enctype="multipart/form-data">
-                <input type="file" name="myFile" />
-                <button type="submit">Upload</button>
-            </form>
         <button type="submit">Add Option</button>
       </form>
 </div>
@@ -108,7 +101,7 @@
             }
         });
 
-
+/* 메뉴 추가 옵션 이미지 기능은 일단 보류하자,이유는 없는게 더 간단해 보여서?
   //옵션 이미지 업로드
   function OptionUploadImage() { //메뉴 추가에서 이미지를 서버에 업로드 용 로직
         const imageInput = document.getElementById('option_imge_UploadForm');
@@ -143,7 +136,7 @@
                   document.getElementById('option_image_url').value = filename;
               }
           });
-        
+*/
   </script>
 </body>
 </html>
