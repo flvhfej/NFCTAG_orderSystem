@@ -50,10 +50,10 @@
     <div id="myModal" class="modal">
       <div class="modal-content">
           <span class="close" onclick="closeModal()">&times;</span>
-          <label><input type="checkbox" id="option-spicy"> 매운맛 추가</label>
-          <h2 id="modal-menu-name"></h2>
-          <p id="modal-price"></p>
-          <p id="modal-description"></p>
+          <div id="modal-options"></div>
+          <% Additional_items.forEach(item => { %>
+          <label><h2><%= item.name %><input type="checkbox" id="option-spicy"></h2></label>
+          <% }) %>
           <button onclick="DoSendOrder()">주문 하기</button>
       </div>
   </div>
@@ -100,6 +100,22 @@
         document.getElementById('modal-price').textContent = price + '원';
         document.getElementById('modal-description').textContent = description;
         document.getElementById('myModal').style.display = 'block';
+
+        // 모달을 열면 그 메뉴에 맞는 옵션들을 가져옴
+            fetch(`/getMenuOptions?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    const optionsContainer = document.getElementById('modal-options');
+                    optionsContainer.innerHTML = ''; // 이전옵션을 초기화
+                    data.options.forEach(option => {
+                        const label = document.createElement('label');
+                        label.innerHTML = `<h2>${option.name}<input type="checkbox" id="option-${option.id}"></h2>`;
+                        optionsContainer.appendChild(label);
+                    });
+                })
+                .catch(error => {
+                    console.error('추가옵션을 가져오는데 실패하였습니다. :', error);
+                });
     }
 
     function closeModal() {

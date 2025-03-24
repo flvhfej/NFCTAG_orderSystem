@@ -225,6 +225,20 @@ app.get('/firstStore/menu2', (req, res) => {
     });
 });
 
+// 손님이 메뉴를 선택시 추가옵션을 불러오는 코드, 228~240
+app.get('/getMenuOptions', (req, res) => {
+    const menuId = req.query.id;
+    const sql = 'SELECT * FROM menu_option WHERE menu_id = ?';
+    db.query(sql, [menuId], (err, results) => {
+        if (err) {
+            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
+            res.status(500).send('데이터베이스 쿼리 실패');
+            return;
+        }
+        res.json({ options: results }); //options로 넘겨줌
+    });
+});
+
 //주문 완료 처리
 app.post('/DoSendOrder', (req, res) => { 
     const { menu } = req.body;
