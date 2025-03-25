@@ -170,7 +170,7 @@ app.post('/admin_addel', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.redirect('firstStore/admin');
+        res.redirect('./TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify');
     });
 });
 
