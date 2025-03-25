@@ -49,6 +49,7 @@
           </div>
         <% }) %>
       </div>
+          <button class="confirm_menu_add"> 메뉴 추가하기 </button>
     </section>
 
    <!--삭제 확인 모달, 관련 스크립 함수(openConfirmModal, closeConfirModal, confirmDelete)-->
@@ -56,9 +57,11 @@
         <div id="confirmModal" class="confirm-modal">
           <div class="confirm-modal-content">
             <span class="close" onclick="closeConfirmModal()">&times;</span>
-            <p>정말로 삭제하겠습니까?</p>
-            <button onclick="confirmDelete()">확인</button>
-            <button onclick="closeConfirmModal()">취소</button>
+               <p>정말로 삭제하겠습니까?</p>
+               <div class="confirm-modal-buttons">
+                 <button onclick="confirmDelete()">확인</button>
+                 <button onclick="closeConfirmModal()">취소</button>
+               </div>
           </div>
         </div>
     </section>
