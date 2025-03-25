@@ -153,6 +153,40 @@
         font-weight: bold;
         font-size: 20px;
     }
+
+
+
+  /* 메뉴 추가 섹션 css */
+.menu-add-step {
+  display: none; /* 기본적으로 숨김 */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 80%; /* 모달 창 높이 */
+  overflow: auto;
+  background-color: white;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  animation: slide-up 0.5s ease-out;
+
+}
+.menu-add-name {
+  display: none; /* 기본적으로 숨김 */
+
+}
+.menu-add-price {
+  display: none; /* 기본적으로 숨김 */
+
+}
+.menu-add-description {
+  display: none; /* 기본적으로 숨김 */
+
+}
+.menu-add-imgupload {
+  display: none; /* 기본적으로 숨김 */
+
+}
   /* 삭제버튼 확인 모달css */
   .confirm-modal {
     display: none; /* Hidden by default */
