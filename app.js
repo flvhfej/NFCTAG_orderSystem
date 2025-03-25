@@ -146,6 +146,7 @@ app.post('/admin_adTooption', (req, res) => {
 });
 
 //흠..이건 메뉴 옵션을 불러오는 코드
+//modal test랑 합칠때 쓰면 될
 app.get('/여기 뭘로 이름을 정하지', (req, res) => {
     const menuId = req.params.menuId;
     const sql = 'SELECT mo.id, mo.name, mo.price, mo.description FROM menu_option mo JOIN menu m ON m.id = mo.menu_id WHERE m.id = ?';
