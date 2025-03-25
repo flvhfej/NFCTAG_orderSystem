@@ -46,26 +46,17 @@
       </div>
     </section>
     
-    <!-- 모달 창 -->
-    <div id="myModal" class="modal">
-      <div class="modal-content">
+     <!--모달 관련 코드-->
+      <div id="myModal" class="modal">
+        <div class="modal-content">
           <span class="close" onclick="closeModal()">&times;</span>
-          <div id="modal-options">
-          <% options.forEach(option => { %>
-          <label>
-              <h2>
-                  <%= option.name %>
-                  <input type="checkbox" id="option-<%= option.id %>">
-             </h2>
-         </label>
-          <% }) %>
+          <h2 id="modal-menu-name"></h2>
+          <p id="modal-price"></p>
+          <p id="modal-description"></p>
+          <div id="modal-options"></div>
           <button onclick="DoSendOrder()">주문 하기</button>
         </div>
       </div>
-  </div>
-
-
-
 
 
     <section class="menu-item">
@@ -115,7 +106,7 @@
                     optionsContainer.innerHTML = ''; // 이전옵션을 초기화
                     data.options.forEach(option => {
                         const label = document.createElement('label');
-                        label.innerHTML = `<h2>${option.name}<input type="checkbox" id="option-${option.id}"></h2>`;
+                        label.innerHTML = `<p>${option.name}<input type="checkbox" id="option-${option.id}"></p>`;
                         optionsContainer.appendChild(label);
                     });
                 })

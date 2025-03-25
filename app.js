@@ -246,7 +246,8 @@ app.use("/test_img_upload", express.static(path.join(__dirname, "test_img_upload
 // 182~210 첫번째 상점 손님페이지
 app.get('/firstStore/menu2', (req, res) => {
     const sql=`SELECT * FROM menu;`;
-    /*const sql = `
+    /*
+    const sql = `
         SELECT * FROM menu;
         SELECT * FROM menu_option;
     `;*/
@@ -257,11 +258,12 @@ app.get('/firstStore/menu2', (req, res) => {
             return;
         }
         
-        /*const menuResults = results[0];
-        const menuOptionResults = results[1];*/
+        //const menuResults = results[0];
+        //const menuOptionResults = results[1];
         const menuResults = results;
         //메인메뉴는 items, 추가옵션은 options
         res.render('firstStore/menu2', { items:menuResults });//items: menuResults, options: menuOptionResults
+        //res.render('firstStore/menu2', { items: menuResults, options: menuOptionResults });
     });
 });
 
@@ -275,7 +277,7 @@ app.get('/getMenuOptions', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('firstStore/menu2', { options: options }); //options로 넘겨줌
+        res.json({ options: options }); //options로 넘겨줌
     });
 });
 
