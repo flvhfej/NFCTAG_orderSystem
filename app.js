@@ -77,7 +77,6 @@ db.connect((err) => {
 // 기본 경로 : 상점 접속을 위한 페이지 로드용, 일단 이런식으로 밖에 못고치겠어
 app.get('/', (req, res) => {
     res.render('main', {TestPageConnect: testPageConnect});// main으로 최초접근 후 다른 곳으로 이동하는 용}
-
 });
 
 
@@ -289,12 +288,37 @@ app.post('/DoSendOrder', (req, res) => {
     res.json({ success: true });
 });
 
-//237~241테스트 상점 메인페이지 접속ㅇㅇ
+
+
+
+
+//295~298 테스트 상점 메인페이지 접속
 app.get('/TestStore/TestStore_admin/TestStore_admin_main', (req, res) => {
         res.render('./TestStore/TestStore_admin/TestStore_admin_main'); // test.ejs 파일을 렌더링
     });
-//242~253 테스트용 손님페이지
-app.get('/TestStore/TestStore_admin/TestStore_admin_main.ejs', (req, res) => {
+
+//테스트 상점 메인관리자 페이지 이동 스크립트
+app.get('/TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify', (req, res) => {
+const sql = 'SELECT * FROM menu';
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
+            res.status(500).send('데이터베이스 쿼리 실패');
+            return;
+        }
+        const menuResults = results;
+        res.render('./TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify', { items: menuResults}); // test.ejs 파일을 렌더링
+    });
+});
+
+
+app.get('/moveToOrder', (req, res) => {
+        res.render('./TestStore/TestStore_admin/Order_related_page/test'); // test.ejs 파일을 렌더링
+});
+
+//308~320 테스트용 손님 페이지 임시로 보류
+/*
+app.get('/TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify', (req, res) => {
     const sql = 'SELECT * FROM menu';
     db.query(sql, (err, results) => {
         if (err) {
@@ -302,17 +326,15 @@ app.get('/TestStore/TestStore_admin/TestStore_admin_main.ejs', (req, res) => {
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.render('TestStore/TestStore_admin/TestStore_admin_main.ejs', { items: results}); // test.ejs 파일을 렌더링
+        const menuResults = results;
+        res.render('/TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify', { items: menuResults}); // test.ejs 파일을 렌더링
     });
 });
+*/
 
-//테스트 상점 메인관리자 페이지 이동 스크립트
-app.get('/moveToModingMenu', (req, res) => {
-        res.render('./TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify'); // test.ejs 파일을 렌더링
-});
-app.get('/moveToOrder', (req, res) => {
-        res.render('./TestStore/TestStore_admin/Order_related_page/test'); // test.ejs 파일을 렌더링
-});
+
+
+
 //서버 실행화면 확인
 const SubpoRt = 3001;
 app.listen(SubpoRt, () => {

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>태그오더 - 주문수정페이지</title>
-  <link rel="stylesheet" href="for_menu_modify..css">
+  <title>태그오더 - 정통 충북대지점</title>
+  <link rel="stylesheet" href="for_menu_modify.css">
 </head>
 <body>
   <header class="header">
@@ -45,20 +45,18 @@
         <% }) %>
       </div>
     </section>
-    
-    <!-- 모달 창 -->
-    <div id="myModal" class="modal">
-      <div class="modal-content">
+
+     <!--모달 관련 코드-->
+      <div id="myModal" class="modal">
+        <div class="modal-content">
           <span class="close" onclick="closeModal()">&times;</span>
           <h2 id="modal-menu-name"></h2>
           <p id="modal-price"></p>
           <p id="modal-description"></p>
+          <div id="modal-options"></div>
           <button onclick="DoSendOrder()">주문 하기</button>
+        </div>
       </div>
-  </div>
-
-
-
 
 
     <section class="menu-item">
@@ -88,8 +86,8 @@
       </div>
     </section>
   </main>
-  
-  
+
+
   <!--모달 관련 스크립트, 나중에 js파일로 따로 빼놓을 것-->
   <script>
     let selectedMenu = '';//선택한 메뉴 이름 저장
@@ -99,6 +97,22 @@
         document.getElementById('modal-price').textContent = price + '원';
         document.getElementById('modal-description').textContent = description;
         document.getElementById('myModal').style.display = 'block';
+
+        // 모달을 열면 그 메뉴에 맞는 옵션들을 가져옴
+            fetch(`/getMenuOptions?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    const optionsContainer = document.getElementById('modal-options');
+                    optionsContainer.innerHTML = ''; // 이전옵션을 초기화
+                    data.options.forEach(option => {
+                        const label = document.createElement('label');
+                        label.innerHTML = `<p>${option.name}<input type="checkbox" id="option-${option.id}"></p>`;
+                        optionsContainer.appendChild(label);
+                    });
+                })
+                .catch(error => {
+                    console.error('추가옵션을 가져오는데 실패하였습니다. :', error);
+                });
     }
 
     function closeModal() {
