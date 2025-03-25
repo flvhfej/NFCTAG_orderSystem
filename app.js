@@ -269,13 +269,13 @@ app.get('/firstStore/menu2', (req, res) => {
 app.get('/getMenuOptions', (req, res) => {
     const menuId = req.query.id;
     const sql = 'SELECT * FROM menu_option WHERE menu_id = ?';
-    db.query(sql, [menuId], (err, results) => {
+    db.query(sql, [menuId], (err, options) => {
         if (err) {
             console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
             res.status(500).send('데이터베이스 쿼리 실패');
             return;
         }
-        res.json({ options: results }); //options로 넘겨줌
+        res.render('firstStore/menu2', { options: options }); //options로 넘겨줌
     });
 });
 
