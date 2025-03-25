@@ -129,6 +129,37 @@ app.post('/admin_adTomenu', (req, res) => {
     }
 });
 
+
+// post방식 admin_adTooption /버튼으로 추가하기
+app.post('/admin_adTooption', (req, res) => {
+    const { menu_id, name, additional_price, description} = req.body;
+
+    const sql = 'INSERT INTO menu_option (menu_id, name, additional_price, description) VALUES (?, ?, ?, ?)';
+    db.query(sql, [menu_id, name, additional_price, description], (err, result) => {
+        if (err) {
+            console.error('옵션 추가 실패:', err);
+            return res.status(500).send('옵션 추가 실패');
+        }
+        console.log('옵션 추가 성공:', result);
+        res.redirect('/firstStore/admin'); // 성공 후 관리자 페이지로 이동
+    });
+});
+
+//흠..이건 메뉴 옵션을 불러오는 코드
+//modal test랑 합칠때 쓰면 될
+app.get('/여기 뭘로 이름을 정하지', (req, res) => {
+    const menuId = req.params.menuId;
+    const sql = 'SELECT mo.id, mo.name, mo.price, mo.description FROM menu_option mo JOIN menu m ON m.id = mo.menu_id WHERE m.id = ?';
+    db.query(sql, [menuId], (err, results) => {
+        if (err) {
+            console.error('옵션 조회 실패:', err.stack);
+            res.status(500).send('옵션 조회 실패');
+            return;
+        }
+        res.json(results);
+    });
+});
+
 // post방식 admin_addel /버튼으로 삭제 시켜버리기
 app.post('/admin_addel', (req, res) => { 
     const { id } = req.body;
@@ -188,7 +219,7 @@ app.post('/upload', (req, res) => {
 upload.single() : 파일이 하나일 때 사용 하는 함수, 인수로는 html상에서 전달하는 객체의 name을 적는다.
 인수인 myFile은 나중에 수정예정, html에서도 수정요구
 */
-//firstStore 어드민용 이미지 업로드 구축
+//firstStore 어드민용 메뉴추가 이미지 업로드 구축
 app.post('/StoreImg_upload', upload.single('myFile'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: "파일이 업로드되지 않았습니다." });
@@ -196,7 +227,16 @@ app.post('/StoreImg_upload', upload.single('myFile'), (req, res) => {
     //res.json({ filename: req.file.originalname });
     res.redirect(`firstStore/admin?filename=${encodeURIComponent(req.file.originalname)}`);
 });
-
+/* 메뉴 추가옵션은 잠시 미룸
+//firstStore 어드민용 옵션추가 이미지 업로드 구축
+app.post('/option_StoreImg_upload', upload.single('myFile'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: "파일이 업로드되지 않았습니다." });
+    }
+    //res.json({ filename: req.file.originalname });
+    res.redirect(`firstStore/admin?filename=${encodeURIComponent(req.file.originalname)}`);
+});
+*/
 //클라이언트가 이미지를 요청할 때 사용할 경로를 추가, 보안에 주의요구됨
 app.use("/test_img_upload", express.static(path.join(__dirname, "test_img_upload/")));
 
