@@ -39,7 +39,7 @@
             <h2><%= item.name %></h2>
             <p class="price"><%= item.price %>원</p>
             <p class="review"><%= item.description %></p>
-            <form action = '/admin_addel' method="POST">
+            <form action = '/admin_addel' method="POST" onsubmit="event.preventDefault(); openConfirmModal(this);">
                 <label class="moding_menu_button_label">
                     <input type="hidden" name="id" value="<%= item.id %>">
                     <button class="moding_menu_button" type="submit">삭제</button>
@@ -50,6 +50,18 @@
           </div>
         <% }) %>
       </div>
+    </section>
+
+   <!--삭제 확인 모달, 관련 스크립 함수(openConfirmModal, closeConfirModal, confirmDelete)-->
+    <section>
+        <div id="confirmModal" class="confirm-modal">
+          <div class="confirm-modal-content">
+            <span class="close" onclick="closeConfirmModal()">&times;</span>
+            <p>정말로 삭제하겠습니까?</p>
+            <button onclick="confirmDelete()">확인</button>
+            <button onclick="closeConfirmModal()">취소</button>
+          </div>
+        </div>
     </section>
 
      <!--모달 관련 코드-->
@@ -64,39 +76,13 @@
         </div>
       </div>
 
-
-    <section class="menu-item">
-      <div class="menu-info">
-        <h2>HOT후라이드</h2>
-        <p>명불허전 바삭함, 고소함 가득 매콤하게 튀긴...</p>
-        <p class="price">21,000원</p>
-        <p class="review">리뷰 23개</p>
-      </div>
-    </section>
-
-    <section class="menu-item">
-      <div class="menu-info">
-        <h2>HOT골드킹</h2>
-        <p>bhc만의 속성된 소스로 매콤, 달콤, 짭조름...</p>
-        <p class="price">21,000원</p>
-        <p class="review">리뷰 2개</p>
-      </div>
-    </section>
-
-    <section class="menu-item">
-      <div class="menu-info">
-        <h2>HOT골드킹 콤보</h2>
-        <p>[윙/봉/닭다리 5조각씩 제공] bhc만의 속성...</p>
-        <p class="price">24,000원</p>
-        <p class="review">리뷰 4개</p>
-      </div>
-    </section>
   </main>
 
 
   <!--모달 관련 스크립트, 나중에 js파일로 따로 빼놓을 것-->
   <script>
     let selectedMenu = '';//선택한 메뉴 이름 저장
+    let deleteForm;
     function openModal(id, name, price, description) {
         selectedMenu=name;
         document.getElementById('modal-menu-name').textContent = name;
@@ -147,6 +133,20 @@
                 alert('주문에 실패했습니다.');
             });
         }
+
+     /*삭제 확인 모달 관련 함수*/
+      function openConfirmModal(form) {
+        deleteForm = form;
+        document.getElementById('confirmModal').style.display = 'block';
+      }
+
+      function closeConfirmModal() {
+        document.getElementById('confirmModal').style.display = 'none';
+      }
+
+      function confirmDelete() {
+        deleteForm.submit();
+      }
 </script>
 </body>
 </html>
