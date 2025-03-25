@@ -39,7 +39,12 @@
             <h2><%= item.name %></h2>
             <p class="price"><%= item.price %>원</p>
             <p class="review"><%= item.description %></p>
-            <button class="moding_menu_button">삭제</button>
+            <form action = '/admin_addel' method="POST">
+                <label class="moding_menu_button_label">
+                    <input type="hidden" name="id" value="<%= item.id %>">
+                    <button class="moding_menu_button" type="submit">삭제</button>
+                </label>
+            </form>
           </div>
             <img class="menu-img" src="/test_img_upload/<%= item.image_url %>" alt="<%= item.name %>">
           </div>
