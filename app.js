@@ -312,7 +312,7 @@ const sql = 'SELECT * FROM menu';
 });
 
 
-app.get('/moveToOrder', (req, res) => {
+app.get('/TestStore/TestStore_admin/Order_related_page/test', (req, res) => {
         res.render('./TestStore/TestStore_admin/Order_related_page/test'); // test.ejs 파일을 렌더링
 });
 
