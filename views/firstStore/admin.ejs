@@ -44,12 +44,26 @@
     </form>
 
     <div>
-      <h1>이미지 업로드</h1>
+      <h1>메뉴 추가 이미지 업로드</h1>
       <form id="imge_UploadForm" action="/Storeimg_upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="myFile" />
         <button type="submit">Upload</button>
     </form>
     </div>
+
+    <div class="Additional_option_container">
+      <h1>추가 옵션</h1>
+      <form id="option_imge_UploadForm" action="/admin_adTooption" method="POST" onsubmit="OptionUploadImage(); return false;">
+        <label for="menu_id">옵션 추가할 메뉴의 id:</label>
+        <input type="text" id="menu_id" name="menu_id" required>
+        <label for="name">옵션 이름:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="additional_price">옵션 가격:</label>
+        <input type="number" id="additional_price" name="additional_price" step="1" required><br>
+        <label for="description">옵션 설명:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+        <button type="submit">Add Option</button>
+      </form>
 </div>
 <!--아래 스크립트는 나중에 js파일로 빼놓을 것-->
 <script>
@@ -87,7 +101,42 @@
             }
         });
 
-        
+/* 메뉴 추가 옵션 이미지 기능은 일단 보류하자,이유는 없는게 더 간단해 보여서?
+  //옵션 이미지 업로드
+  function OptionUploadImage() { //메뉴 추가에서 이미지를 서버에 업로드 용 로직
+        const imageInput = document.getElementById('option_imge_UploadForm');
+        const formData = new FormData();
+        formData.append('myFile', imageInput.files[0]);
+
+        fetch('/option_StoreImg_upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.filename) {
+                document.getElementById('option_image_url').value = data.filename;
+                alert('이미지 업로드 완료!');
+            } else {
+                alert('이미지 업로드 실패!');
+            }
+        })
+        .catch(error => console.error('업로드 오류:', error));
+    }
+
+    //옵션 이미지 업로드 시 자동으로 이미지 파일명을 입력해주는 기능
+    function OPgetQueryParam(param) {
+              const urlParams = new URLSearchParams(window.location.search);
+              return urlParams.get(param);
+          }
+
+          document.addEventListener('DOMContentLoaded', () => {
+              const filename = getQueryParam('filename');
+              if (filename) {
+                  document.getElementById('option_image_url').value = filename;
+              }
+          });
+*/
   </script>
 </body>
 </html>
