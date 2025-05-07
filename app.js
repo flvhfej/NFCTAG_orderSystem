@@ -1,41 +1,41 @@
 const express = require('express');
+const session = require('express-session');
 const mysql = require('mysql');
 const path = require('path');
-const multer  = require('multer')
+const multer = require('multer');
+const bodyParser = require('body-parser');
+const cors = require('cors'); // ⭐ 추가 (ngrok 등 외부 요청 허용용)
 
-let testPageConnect = false; // db연결 안되면 자동으로 test.ejs열리게 설정
-//const upload = multer({ dest: 'test_img_upload/' }) //multer를 사용해 이미지 저장할 경로,테스트용임
+const app = express();
 
-//7~23 line : multer를 사용해 이미지 저장할 경로
-const upload = multer({  
+// ✅ 기본 미들웨어
+app.use(express.static('views'));
+app.set('view engine', 'ejs');
+app.set('views', './views');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cors()); // ⭐ 외부 fetch 허용
+app.use(session({
+    secret: 'tagorder-secret-key',
+    resave: false,
+    saveUninitialized: false
+}));
+
+// ✅ 파일 업로드 설정
+const upload = multer({
     storage: multer.diskStorage({
-      	filename(req, file, done) {
-          	console.log(file);
-			done(null, file.originalname);
+        filename(req, file, done) {
+            console.log(file);
+            done(null, file.originalname);
         },
-        //파일저장 위치 지정, file의 이름을 로그에 출력하고 test_img_upload파일에 이미지를 저장하게 될거야, 그래야만 해
-		destination(req, file, done) {
-      		console.log(file);
-		    done(null, path.join(__dirname, "test_img_upload/"));
-		    //17line 지금은 모든 상점이 같은 폴더를 공유하나, 이후 각 상점 이미지 폴저인 menu_img폴더로 옳길 방법을 찾아야해,
-		    //어디  상점 어드민인지, 거기서 쿼리 쏘면 그 경로로 오는 뭐라쓰는거냐 어쨋든 그런 방식이 필요해보임
-            //path.join(__dirname, "test_img_upload/") 이건 변수로도 선언이 가능하나 어차피 나중에 여러 상점 늘린다면 이걸로 쓸 수 밖에 없음
-	    },
+        destination(req, file, done) {
+            console.log(file);
+            done(null, path.join(__dirname, "test_img_upload/"));
+        },
     }),
 });
 
-//26~33 line : 필요 변수 선언
-const bodyParser = require('body-parser');
-const app = express();
-
-app.use(express.static('views'));
-app.set('view engine', 'ejs');
-app.set('views', './views'); // 뷰 파일 디렉토리 설정
-app.use(bodyParser.urlencoded({ extended: true })); //url인코딩 데이터 파싱
-app.use(bodyParser.json()); // json 데이터 파싱
-
-
-//39~74 line : db 접속코드
+// ✅ DB 연결
 require('dotenv').config();
 const db = mysql.createConnection({
     host: process.env.TAGORDER_DB_HOST,
@@ -43,213 +43,181 @@ const db = mysql.createConnection({
     password: process.env.TAGORDER_DB_PASSWORD,
     database: process.env.TAGORDER_DB,
     port: process.env.TAGORDER_DB_PORTNUM,
-    multipleStatements: true // 여러 쿼리 실행을 허용
+    multipleStatements: true
 });
 
 db.connect((err) => {
     if (err) {
         console.error('데이터베이스 연결 실패: ' + err.stack);
-        const readline = require('readline'); //readline 활성화
-        const tsuzukeru = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-        });
-
-        tsuzukeru.question('계속 진행하겠습니까? (Y/N)', (answer) => {
-        if(answer=='Y' || answer=='y'){
-            console.log('계속 진행합니다');
-            testPageConnect=true;
-            tsuzukeru.close();
-        }
-        else{
-             console.log('잘못 입력했어도 종료합니다.')
-             tsuzukeru.close();
-             process.exit(1);
-        }
-        });
+        process.exit(1);
     }
-    else{
     console.log('데이터베이스와 연결 성공!');
-    }
 });
 
+// ✅ 메모리 저장용 (기본 위치)
+const storeLocations = {
+    firstStore: { lat: 36.625688, lng: 127.465233 },
+};
 
-// 기본 경로 : 상점 접속을 위한 페이지 로드용, 일단 이런식으로 밖에 못고치겠어
-app.get('/', (req, res) => {
-    if(testPageConnect) { res.render('./TestStore/test.ejs');}
-    else {res.render('main');} // main으로 최초접근 후 다른 곳으로 이동하는 용}
+// 거리 계산 함수
+function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
+    const R = 6371000;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
 
-});
+// ✅ 위치 인증 라우트
+app.post('/verifyLocation2', (req, res) => {
+    const { lat, lng, store } = req.body;
+    const storeGPS = storeLocations[store];
+    if (!storeGPS) return res.json({ allowed: false });
 
+    const distance = getDistanceFromLatLonInMeters(lat, lng, storeGPS.lat, storeGPS.lng);
+    console.log(`[위치인증] ${distance.toFixed(2)}m 거리`);
 
-//60~177line firstStore 관리자 페이지
-app.get('/firstStore/admin', (req, res) => {
-    const sql = 'SELECT * FROM menu';
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
-            res.status(500).send('데이터베이스 쿼리 실패');
-            return;
-        }
-        res.render('firstStore/admin', { items1: results });
-        //items1 -> admin.ejs to line 12
-    });
-});
-
-
-// post방식 admin_adTomenu /버튼으로 추가하기
-app.post('/admin_adTomenu', (req, res) => {
-    var id = 0;
-    if (req.body.id == 0) {
-        id = 1;
-        insertMenu();
+    if (distance <= 50) {
+        req.session.locationVerified = true;
+        res.json({ allowed: true });
     } else {
-        const fInd_max_id_from_menu = 'SELECT MAX(id) as max_id FROM menu';
-        db.query(fInd_max_id_from_menu, (err, result) => {
-            if (err) {
-                console.error('id 조회 실패: ' + err.stack);
-                res.status(500).send('데이터베이스 쿼리 실패');
-                return;
-            }
-            id = (result[0].max_id || 0) + 1;
-            insertMenu();
-        });
-    }
-
-    function insertMenu() {
-        const { name, image_url, price, description } = req.body;
-        const sql = 'INSERT INTO menu (id, name, image_url, price, description) VALUES (?, ?, ?, ?, ?)';
-        db.query(sql, [id, name, image_url, price, description], (err, result) => {
-            if (err) {
-                console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
-                res.status(500).send('데이터베이스 쿼리 실패');
-                return;
-            }
-            res.redirect('/firstStore/admin');
-        });
+        res.json({ allowed: false });
     }
 });
 
-// post방식 admin_addel /버튼으로 삭제 시켜버리기
-app.post('/admin_addel', (req, res) => { 
-    const { id } = req.body;
-    console.log('버튼삭제 요청:', req.body); //일단 수시로 확인하기 위한 로그
-    const sql = 'DELETE FROM menu WHERE id = ?;'
-    db.query(sql, [id], (err, result) => {
+app.post('/verifyLocation', (req, res) => {
+    const { lat, lng, store } = req.body;
+    const storeGPS = storeLocations[store];
+    if (!storeGPS) return res.json({ allowed: false });
+
+    const distance = getDistanceFromLatLonInMeters(lat, lng, storeGPS.lat, storeGPS.lng);
+    console.log(`${store} 위치 확인 거리: ${distance.toFixed(2)}m`);
+
+    if (distance <= 50) {
+        req.session.locationVerified = true;
+        res.json({ allowed: true });
+    } else {
+        res.json({ allowed: false });
+    }
+});
+
+// ✅ 가게 GPS 저장 라우트
+app.post('/saveStoreLocation2', (req, res) => {
+    const { store, lat, lng } = req.body;
+    if (!store || !lat || !lng) {
+        return res.status(400).json({ success: false, message: "요청 정보 누락" });
+    }
+
+    const sql = `
+        INSERT INTO store_location (store_id, latitude, longitude)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE latitude = ?, longitude = ?, updated_at = NOW()
+    `;
+
+    db.query(sql, [store, lat, lng, lat, lng], (err, result) => {
         if (err) {
-            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
-            res.status(500).send('데이터베이스 쿼리 실패');
-            return;
+            console.error('[DB] 위치 저장 실패:', err);
+            return res.status(500).json({ success: false, message: 'DB 저장 실패' });
         }
-        res.redirect('firstStore/admin');
+
+        storeLocations[store] = { lat: parseFloat(lat), lng: parseFloat(lng) }; // 메모리에도 저장
+        console.log(`✅ [${store}] 위치 DB 저장 완료 → ${lat}, ${lng}`);
+        return res.json({ success: true });
     });
 });
+app.post('/saveStoreLocation', (req, res) => {
+    const { store, lat, lng } = req.body;
 
-
-//테스트 이미지 업로드 
-//firststore admin에서 이미지 선택 후 업로드 클릭 시 서버 로그에 파일 디테일을 출력함
-//동시에 NodeJsver_ORDERTAG/test_img_upload에 파일이 랜덤한 이름으로 저장됨. 파일확장자도 지워지니 그건 주의
-//line 3~4부분이 multer와 파일 저장 위치 이다.
-//multipart/form-data 형식의 body를 파싱해서 파일로 다시 변환하고 dest에 등록된 경로에 업로드 된다.
-//upload.single() : 파일이 하나일 때 사용 하는 함수, 인수로는 html상에서 전달하는 객체의 name을 적는다.
-//예시로 admin.ejs에는 input의 name태그가 myFilef로 되어있다.
-//////////// 
-//이건 업로드 파일 확장자명을 지키기 위한 로직 위에서 변경요구
-/*
-const upload = multer({
-    storage: multer.diskStorage({
-      	filename(req, file, done) {
-          	console.log(file);
-			done(null, file.originalname);
-        },
-		destination(req, file, done) {
-      		console.log(file);
-		    done(null, path.join(__dirname, "public"));
-	    },
-    }),
-});
-
-////////////
-const uploadMiddleware = upload.single('myFile');
-app.use(uploadMiddleware);
-
-app.post('/upload', (req, res) => {
-    console.log(req.file);
-    res.status(200).send('uploaded');
-});
-
-
-*/
-
-
-//////////
-//이곳에 firstStore 어드민 이미지 업로드 로직 구현 예정
-
-/*
-upload.single() : 파일이 하나일 때 사용 하는 함수, 인수로는 html상에서 전달하는 객체의 name을 적는다.
-인수인 myFile은 나중에 수정예정, html에서도 수정요구
-*/
-//firstStore 어드민용 이미지 업로드 구축
-app.post('/StoreImg_upload', upload.single('myFile'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: "파일이 업로드되지 않았습니다." });
+    if (!store || !lat || !lng) {
+        return res.status(400).json({ success: false, message: "요청 정보 누락" });
     }
-    //res.json({ filename: req.file.originalname });
-    res.redirect(`firstStore/admin?filename=${encodeURIComponent(req.file.originalname)}`);
+
+    // ✅ 메모리에 저장 (DB는 사용하지 않음)
+    storeLocations[store] = {
+        lat: parseFloat(lat),
+        lng: parseFloat(lng)
+    };
+
+    console.log(`✅ [${store}] 위치 메모리 저장 완료 → 위도: ${lat}, 경도: ${lng}`);
+    return res.json({ success: true });
 });
 
-//클라이언트가 이미지를 요청할 때 사용할 경로를 추가, 보안에 주의요구됨
-app.use("/test_img_upload", express.static(path.join(__dirname, "test_img_upload/")));
+// ✅ 메인 진입
+app.get('/', (req, res) => {
+    const table_num = req.query.tableNum;
+    res.render('main', { TestPageConnect: true, tableNum: table_num });
+});
 
-
-
-
-// 182~210 첫번째 상점 손님페이지
+// ✅ 고객용 메뉴 페이지 (GPS 인증 필수)
 app.get('/firstStore/menu2', (req, res) => {
-    const sql=`SELECT * FROM menu;`;
-    /*const sql = `
-        SELECT * FROM menu;
-        SELECT * FROM menu_option;
-    `;*/
-    db.query(sql, (err, results) => {
+    if (!req.session.locationVerified) {
+        return res.status(403).send("🚫 위치 인증이 필요합니다.");
+    }
+
+    const tableNum = req.query.tableNum;
+    db.query('SELECT * FROM menu', (err, results) => {
         if (err) {
-            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
-            res.status(500).send('데이터베이스 쿼리 실패');
-            return;
+            console.error('쿼리 실패:', err);
+            return res.status(500).send('DB 오류');
         }
-        
-        /*const menuResults = results[0];
-        const menuOptionResults = results[1];*/
-        const menuResults = results;
-        //메인메뉴는 items, 추가옵션은 options
-        res.render('firstStore/menu2', { items:menuResults });//items: menuResults, options: menuOptionResults
+        res.render('firstStore/menu2', { items: results, tableNum });
     });
 });
 
-//주문 완료 처리
-app.post('/DoSendOrder', (req, res) => { 
-    const { menu } = req.body;
-    console.log('주문 완료:', menu); // 주문 완료 로그
-    // 주문 완료 처리 로직을 여기에 추가할 것
+// ✅ 고객: 메뉴 옵션 불러오기
+app.get('/getMenuOptions', (req, res) => {
+    const menuId = req.query.id;
+    const sql = 'SELECT * FROM menu_option WHERE menu_id = ?';
+    db.query(sql, [menuId], (err, options) => {
+        if (err) return res.status(500).send('옵션 조회 실패');
+        res.json({ options });
+    });
+});
+
+// ✅ 고객: 주문 전송
+app.post('/DoSendOrder', (req, res) => {
+    const { menu, options, totalPrice, tableNum } = req.body;
+    console.log('주문 완료:', menu, options, totalPrice, tableNum);
+    global.orders = global.orders || [];
+    global.orders.push({ menu, options, totalPrice, tableNum });
     res.json({ success: true });
 });
 
-
-//213~224 테스트용 손님페이지
-app.get('/TestStore/test', (req, res) => {
-    const sql = 'SELECT * FROM menu';
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error('쿼리가 제대로 명시되지 않았습니다.: ' + err.stack);
-            res.status(500).send('데이터베이스 쿼리 실패');
-            return;
-        }
-        res.render('TestStore/test', { items: results}); // test.ejs 파일을 렌더링
+// ✅ 관리자 페이지
+app.get('/firstStore/admin', (req, res) => {
+    db.query('SELECT * FROM menu', (err, results) => {
+        if (err) return res.status(500).send('DB 오류');
+        res.render('firstStore/admin', { items1: results });
     });
 });
 
-//서버 실행화면 확인
-const SubpoRt = 3001;
-app.listen(SubpoRt, () => {
-    console.log(`서버가 ${SubpoRt} 실행됩니다.`);
+// ✅ 테스트 관리자 메인 페이지
+app.get('/TestStore/TestStore_admin/TestStore_admin_main', (req, res) => {
+    res.render('./TestStore/TestStore_admin/TestStore_admin_main');
+});
+
+// ✅ 테스트 메뉴 수정 페이지
+app.get('/TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify', (req, res) => {
+    db.query('SELECT * FROM menu', (err, results) => {
+        if (err) return res.status(500).send('DB 오류');
+        res.render('./TestStore/TestStore_admin/Modifying_menu_page/TestStore_menu_modify', { items: results });
+    });
+});
+
+// ✅ 테스트 주문 내역 보기
+app.get('/TestStore/TestStore_admin/Order_related_page/test', (req, res) => {
+    res.render('./TestStore/TestStore_admin/Order_related_page/test', { orders: global.orders || [] });
+});
+
+// ✅ 정적 이미지 경로
+app.use("/test_img_upload", express.static(path.join(__dirname, "test_img_upload/")));
+
+// ✅ 서버 실행
+const PORT = 3001;
+app.listen(PORT, () => {
+    console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
 });
